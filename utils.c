@@ -13,7 +13,7 @@ int GetInputInt(const char *prompt)
     printf("%s", prompt);
     while(scanf("%d", &value) != 1) {
         ClearInput();
-        printf("输入错误，请重新输入: ");
+        printf("杈撳叆閿欒锛岃閲嶆柊杈撳叆: ");
     }
     return value;
 }
@@ -24,7 +24,7 @@ double GetInputDouble(const char *prompt)
     printf("%s", prompt);
     while(scanf("%lf", &value) != 1) {
         ClearInput();
-        printf("输入错误，请重新输入: ");
+        printf("杈撳叆閿欒锛岃閲嶆柊杈撳叆: ");
     }
     return value;
 }

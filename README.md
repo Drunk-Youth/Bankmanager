@@ -132,7 +132,7 @@ gcc bank.c account.c transaction.c file_io.c utils.c -o bank_system
 5. 系统会自动保存所有操作到文件，确保数据持久化
 
 ## 扩展建议
-- 添加交易记录功能
+- ~~添加交易记录功能~~
 - 实现账户排序和搜索
 - 增加更多权限级别
 - 改进用户界面（如使用图形界面）

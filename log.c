@@ -45,7 +45,7 @@ int EnqueueLog(int id, const char* type, double amt, double bal) {
     g_logQueue.logs[pos].amount = amt;
     g_logQueue.logs[pos].balance = bal;
     GetCurrentTimeStr(g_logQueue.logs[pos].timestamp);
-    strcpy(g_logQueue.logs[pos].location, "四川省 德阳市"); // 根据你的需求固定地点
+    strcpy(g_logQueue.logs[pos].location, "宇宙总行"); // 根据你的需求固定地点
     
     // 队尾指针后移
     g_logQueue.rear = (g_logQueue.rear + 1) % MAX_LOGS;

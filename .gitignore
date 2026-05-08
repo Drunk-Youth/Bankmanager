@@ -1,0 +1,5 @@
+*.o
+*.exe
+bank.dat
+.vscode/launch.json
+.vscode/tasks.json

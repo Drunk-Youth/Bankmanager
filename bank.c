@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "bank.h"
-
+LogQueue g_logQueue; // <-- 新增：定义全局日志队列
 STACCOUNT g_astAccounts[MAX_ACCOUNTS];
 
 int g_iAccCount = 1;
@@ -19,6 +19,7 @@ int main(void)
         printf("=== 简易银行账户管理系统 ===\n");
         printf("欢迎使用! 系统已加载%d个账户\n", g_iAccCount);
         InitAdminAccount();//初始化管理员账号
+        InitLogQueue();
         int iChoice=-1; //选择标志
         int pChoice=-1;
         while (1) {
@@ -58,7 +59,7 @@ int main(void)
                 }
                     break;
                 case 1:
-                    printf("1. 存款\n2. 取款\n3. 查询\n4. 显示所有账户\n5. 删除账户\n6. 创建管理员账户\n0. 退出账户");
+                    printf("1. 存款\n2. 取款\n3. 查询\n4. 显示所有账户\n5. 删除账户\n6. 创建管理员账户\n7.查看交易\n日志0. 退出账户");
                     pChoice=-1;
                     scanf("%d", &pChoice);
 
@@ -83,6 +84,9 @@ int main(void)
                             break;
                         case 6:
                             CreateAccount(1);
+                            break;
+                        case 7:
+                            ShowTransactionLogs();
                             break;
                         case 0://EXIT
                             printf("谢谢使用!\n按任意键退出");

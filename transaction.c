@@ -31,6 +31,7 @@ void Deposit(int id)
             g_astAccounts[FindAccount(id)].balance+=amount;
             printf("success");
             QueryBalance(id);
+            EnqueueLog(id, "Deposit", amount, g_astAccounts[FindAccount(id)].balance);
             SaveData();
             break;
         }
@@ -68,6 +69,7 @@ void Withdraw(int id)
         if (g_astAccounts[FindAccount(id)].password==temp_password) {
             if (g_astAccounts[FindAccount(id)].balance>amount) {
                 g_astAccounts[FindAccount(id)].balance-=amount;
+                EnqueueLog(id, "Withdraw", amount, g_astAccounts[FindAccount(id)].balance);
                 printf("success");
                 QueryBalance(id);
                 SaveData();

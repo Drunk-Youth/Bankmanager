@@ -77,4 +77,7 @@ int IsLogQueueFull();                   // 检查队列是否满
 int IsLogQueueEmpty();                  // 检查队列是否空
 int EnqueueLog(int id, const char* type, double amt, double bal); // 入队
 void ShowTransactionLogs();             // 显示所有日志
+
+void SearchLogs(const char* pattern);//日志搜索
+
 #endif

@@ -59,7 +59,7 @@ int main(void)
                 }
                     break;
                 case 1:
-                    printf("1. 存款\n2. 取款\n3. 查询\n4. 显示所有账户\n5. 删除账户\n6. 创建管理员账户\n7.查看交易\n日志0. 退出账户");
+                    printf("1. 存款\n2. 取款\n3. 查询\n4. 显示所有账户\n5. 删除账户\n6. 创建管理员账户\n7.查看交易日志\n8.搜索交易日志\n0. 退出账户");
                     pChoice=-1;
                     scanf("%d", &pChoice);
 
@@ -87,6 +87,12 @@ int main(void)
                             break;
                         case 7:
                             ShowTransactionLogs();
+                            break;
+                        case 8:
+                            printf("请输入搜索内容");
+                            char pattern[50];
+                            scanf("%s", pattern);
+                            SearchLogs(pattern);
                             break;
                         case 0://EXIT
                             printf("谢谢使用!\n按任意键退出");

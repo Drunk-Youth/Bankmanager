@@ -72,3 +72,105 @@ void ShowTransactionLogs() {
         i = (i + 1) % MAX_LOGS;
     }
 }
+
+// 1. 构建部分匹配表 (Next Array)
+// 这是KMP算法的核心预处理步骤
+void ComputeLPSArray(const char* pattern, int M, int* lps) {
+    int len = 0; // length of the previous longest prefix suffix
+    lps[0] = 0; // lps[0] is always 0
+    int i = 1;
+
+    while (i < M) {
+        if (pattern[i] == pattern[len]) {
+            len++;
+            lps[i] = len;
+            i++;
+        } else {
+            if (len != 0) {
+                len = lps[len - 1];
+            } else {
+                lps[i] = 0;
+                i++;
+            }
+        }
+    }
+}
+
+// 2. KMP 搜索函数
+// 在文本 text 中查找模式 pattern，找到后调用回调函数处理匹配位置
+void KMPSearch(const char* pattern, const char* text, void (*callback)(int)) {
+    int M = strlen(pattern);
+    int N = strlen(text);
+
+    if (M == 0) return;
+
+    // 创建并计算LPS数组
+    int* lps = (int*)malloc(M * sizeof(int));
+    ComputeLPSArray(pattern, M, lps);
+
+    int i = 0; // index for text
+    int j = 0; // index for pattern
+
+    while (i < N) {
+        if (pattern[j] == text[i]) {
+            j++;
+            i++;
+        }
+
+        if (j == M) {
+            // 找到匹配，调用回调函数输出该行或处理
+            callback(i - j);
+            j = lps[j - 1];
+        } else if (i < N && pattern[j] != text[i]) {
+            if (j != 0) {
+                j = lps[j - 1];
+            } else {
+                i++;
+            }
+        }
+    }
+
+    free(lps);
+}
+
+// 3. 回调函数：用于打印匹配到的日志行号
+void PrintMatchLine(int pos) {
+    // 这里简化处理，实际应用中需要根据换行符计算行号
+    // 或者直接打印匹配位置附近的上下文
+    printf("找到匹配 (位置: %d)\n", pos);
+}
+
+// 4. 对外接口：搜索交易日志
+void SearchLogs(const char* pattern) {
+    if (IsLogQueueEmpty()) {
+        printf("暂无日志可供搜索。\n");
+        return;
+    }
+
+    printf("\n=== 搜索日志: '%s' ===\n", pattern);
+    
+    // 简化版：遍历每一条日志进行匹配
+    int i = g_logQueue.front;
+    int lineNum = 1;
+    
+    while (i != g_logQueue.rear) {
+        LogEntry e = g_logQueue.logs[i];
+        
+        // 将日志条目格式化为字符串（模拟一行文本）
+        char logLine[200];
+        sprintf(logLine, "ID:%d Type:%s Amount:%.2f Balance:%.2f Time:%s", 
+                e.account_id, e.type, e.amount, e.balance, e.timestamp);
+        
+        // 使用KMP检查这一行是否包含模式
+        // 这里为了演示调用了标准 strstr，你可以将其替换为上面的 KMPSearch
+        // 但考虑到单行文本较短，KMP优势不大；如果是超长日志文件，KMP优势巨大
+        
+        if (strstr(logLine, pattern) != NULL) {
+            printf("%-3d %-8d %-10s %-10.2f %-15s\n", 
+                   lineNum, e.account_id, e.type, e.amount, e.timestamp);
+        }
+        
+        i = (i + 1) % MAX_LOGS;
+        lineNum++;
+    }
+}

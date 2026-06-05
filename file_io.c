@@ -22,6 +22,11 @@ void SaveData()
     FILE *file = fopen("bank.dat", "wb");
     fwrite(g_astAccounts, sizeof(STACCOUNT), 50, file);
     fclose(file);
+
+    FILE *logfile = fopen("log.dat", "wb");
+    fwrite(&g_logQueue, sizeof(LogQueue), 1, logfile);
+    fclose(logfile);
+
     LoadData();
 }
 
@@ -52,4 +57,28 @@ void LoadData()
         }
     }
     g_iAccCount= result;
+
+    InitLogQueue();
+    FILE *logfile = fopen("log.dat", "rb");
+    if (logfile != NULL) {
+        fread(&g_logQueue, sizeof(LogQueue), 1, logfile);
+        fclose(logfile);
+    }
+}
+
+void SaveMerkleRoot() {
+    FILE* f = fopen("merkle.dat", "wb");
+    if (!f) return;
+    fwrite(g_merkleRoot.data, 1, HASH_SIZE, f);
+    fclose(f);
+}
+
+void LoadMerkleRoot() {
+    FILE* f = fopen("merkle.dat", "rb");
+    if (!f) {
+        memset(g_merkleRoot.data, 0, HASH_SIZE);
+        return;
+    }
+    fread(g_merkleRoot.data, 1, HASH_SIZE, f);
+    fclose(f);
 }

@@ -19,7 +19,7 @@ int main(void)
         printf("=== 简易银行账户管理系统 ===\n");
         printf("欢迎使用! 系统已加载%d个账户\n", g_iAccCount);
         InitAdminAccount();//初始化管理员账号
-        InitLogQueue();
+        LoadMerkleRoot();
         int iChoice=-1; //选择标志
         int pChoice=-1;
         while (1) {
@@ -59,7 +59,7 @@ int main(void)
                 }
                     break;
                 case 1:
-                    printf("1. 存款\n2. 取款\n3. 查询\n4. 显示所有账户\n5. 删除账户\n6. 创建管理员账户\n7.查看交易日志\n8.搜索交易日志\n0. 退出账户");
+                     printf("1. 存款\n2. 取款\n3. 查询\n4. 显示所有账户\n5. 删除账户\n6. 创建管理员账户\n7.查看交易日志\n8.搜索交易日志\n9.查看默克尔根\n10.验证日志完整性\n0. 退出账户");
                     pChoice=-1;
                     scanf("%d", &pChoice);
 
@@ -93,6 +93,15 @@ int main(void)
                             char pattern[50];
                             scanf("%s", pattern);
                             SearchLogs(pattern);
+                            break;
+                        case 9:
+                            PrintMerkleRoot();
+                            break;
+                        case 10:
+                            if (VerifyMerkleTree())
+                                printf("\n默克尔树验证通过，日志未被篡改。\n");
+                            else
+                                printf("\n警告：默克尔树验证失败，日志可能已被篡改！\n");
                             break;
                         case 0://EXIT
                             printf("谢谢使用!\n按任意键退出");

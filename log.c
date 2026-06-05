@@ -4,6 +4,13 @@
 #include <time.h>
 #include "bank.h"
 
+int GetLogCount() {
+    if (g_logQueue.rear >= g_logQueue.front)
+        return g_logQueue.rear - g_logQueue.front;
+    else
+        return MAX_LOGS - g_logQueue.front + g_logQueue.rear;
+}
+
 // 初始化日志队列
 void InitLogQueue() {
     g_logQueue.front = 0;
@@ -49,6 +56,9 @@ int EnqueueLog(int id, const char* type, double amt, double bal) {
     
     // 队尾指针后移
     g_logQueue.rear = (g_logQueue.rear + 1) % MAX_LOGS;
+    
+    BuildMerkleTree(&g_merkleRoot);
+    SaveMerkleRoot();
     
     return 1; // 成功
 }

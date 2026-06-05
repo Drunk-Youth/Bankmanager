@@ -67,7 +67,7 @@ void Withdraw(int id)
         printf("请输入密码");
         scanf("%d",&temp_password);
         if (g_astAccounts[FindAccount(id)].password==temp_password) {
-            if (g_astAccounts[FindAccount(id)].balance>amount) {
+            if (g_astAccounts[FindAccount(id)].balance>=amount) {
                 g_astAccounts[FindAccount(id)].balance-=amount;
                 EnqueueLog(id, "Withdraw", amount, g_astAccounts[FindAccount(id)].balance);
                 printf("success");

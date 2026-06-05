@@ -80,4 +80,22 @@ void ShowTransactionLogs();             // 显示所有日志
 
 void SearchLogs(const char* pattern);//日志搜索
 
+int GetLogCount();
+
+#define HASH_SIZE 32
+
+typedef struct {
+    unsigned char data[HASH_SIZE];
+} HashValue;
+
+extern HashValue g_merkleRoot;
+
+void HashLogEntry(const LogEntry* entry, HashValue* out);
+void BuildMerkleTree(HashValue* root);
+void HashToHex(const HashValue* hash, char* hex_out);
+void PrintMerkleRoot();
+int VerifyMerkleTree();
+void SaveMerkleRoot();
+void LoadMerkleRoot();
+
 #endif

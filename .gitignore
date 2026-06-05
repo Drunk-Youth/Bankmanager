@@ -1,5 +1,6 @@
 *.o
 *.exe
-bank.dat
+*.dat
+AGENTS.md
 .vscode/launch.json
 .vscode/tasks.json

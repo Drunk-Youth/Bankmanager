@@ -59,7 +59,7 @@ int main(void)
                 }
                     break;
                 case 1:
-                    printf("1. 存款\n2. 取款\n3. 查询\n4. 显示所有账户\n5. 删除账户\n6. 创建管理员账户\n7.查看交易日志\n8.搜索交易日志\n0. 退出账户");
+                    printf("1. 存款\n2. 取款\n3. 查询\n4. 显示所有账户\n5. 删除账户\n6. 创建管理员账户\n7.查看交易日志\n8.搜索交易日志\n9.转账\n10.资金关系图分析\n0. 退出账户");
                     pChoice=-1;
                     scanf("%d", &pChoice);
 
@@ -90,9 +90,62 @@ int main(void)
                             break;
                         case 8:
                             printf("请输入搜索内容");
+                            {
                             char pattern[50];
                             scanf("%s", pattern);
                             SearchLogs(pattern);
+                            }
+                            break;
+                        case 9:
+                            Transfer(user_id);
+                            break;
+                        case 10:
+                            {
+                            int g_choice;
+                            do {
+                                printf("\n=== 资金关系图分析 ===\n");
+                                printf("1. 显示全部转账关系图\n");
+                                printf("2. 查看指定账户关联关系\n");
+                                printf("3. 查看最活跃账户排名\n");
+                                printf("4. 查找转账路径\n");
+                                printf("5. 生成虚拟交易记录\n");
+                                printf("0. 返回\n");
+                                printf("请选择: ");
+                                scanf("%d", &g_choice);
+                                switch(g_choice) {
+                                    case 1:
+                                        ShowTransferGraph();
+                                        break;
+                                    case 2: {
+                                        int search_id;
+                                        printf("请输入账户ID: ");
+                                        scanf("%d", &search_id);
+                                        ShowAccountRelations(search_id);
+                                        break;
+                                    }
+                                    case 3:
+                                        ShowMostActiveNodes();
+                                        break;
+                                    case 4: {
+                                        int from, to;
+                                        printf("请输入起始账户ID: ");
+                                        scanf("%d", &from);
+                                        printf("请输入目标账户ID: ");
+                                        scanf("%d", &to);
+                                        FindTransferPaths(from, to);
+                                        break;
+                                    }
+                                    case 5:
+                                        GenerateDummyData();
+                                        break;
+                                    case 0:
+                                        break;
+                                    default:
+                                        printf("无效选择!\n");
+                                        break;
+                                }
+                            } while (g_choice != 0);
+                            }
                             break;
                         case 0://EXIT
                             printf("谢谢使用!\n按任意键退出");
@@ -107,7 +160,7 @@ int main(void)
                     }
                     break;
                 case 2:
-                    printf("1. 存款\n2. 取款\n3. 查询\n0.退出账户");
+                    printf("1. 存款\n2. 取款\n3. 查询\n4.转账\n0.退出账户");
                     pChoice=-1;
                     scanf("%d", &pChoice);
                     switch(pChoice) {
@@ -119,6 +172,9 @@ int main(void)
                             break;
                         case 3:
                             QueryBalance(user_id);
+                            break;
+                        case 4:
+                            Transfer(user_id);
                             break;
                         case 0://EXIT
                             printf("谢谢使用!\n按任意键退出");

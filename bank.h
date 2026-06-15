@@ -54,7 +54,8 @@ void InitAdminAccount();
 // 日志条目结构
 typedef struct {
     int account_id;      // 涉及的账户ID
-    char type[10];       // 操作类型: "Deposit" 或 "Withdraw"
+    int target_id;       // 转账目标账户ID，非转账为-1
+    char type[10];       // 操作类型: "Deposit","Withdraw","Transfer","Receive"
     double amount;       // 交易金额
     double balance;      // 交易后的余额
     char timestamp[20];  // 时间戳 (格式: YYYY-MM-DD HH:MM:SS)
@@ -75,9 +76,19 @@ extern LogQueue g_logQueue;
 void InitLogQueue();                    // 初始化队列
 int IsLogQueueFull();                   // 检查队列是否满
 int IsLogQueueEmpty();                  // 检查队列是否空
-int EnqueueLog(int id, const char* type, double amt, double bal); // 入队
+int EnqueueLog(int id, const char* type, double amt, double bal, int target); // 入队
 void ShowTransactionLogs();             // 显示所有日志
 
 void SearchLogs(const char* pattern);//日志搜索
+
+// 转账功能
+void Transfer(int from_id);
+
+// 资金关系图分析
+void ShowTransferGraph();
+void ShowAccountRelations(int id);
+void ShowMostActiveNodes();
+void FindTransferPaths(int from_id, int to_id);
+void GenerateDummyData();
 
 #endif

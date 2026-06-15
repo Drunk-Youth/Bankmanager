@@ -1,9 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "bank.h"
-#include <io.h>
-
-#define FILE_NAME bank.bat
 
 //要操作的全局变量，但不在本模块定义需要声明为外部引入
 extern STACCOUNT g_astAccounts[];

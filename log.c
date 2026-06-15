@@ -31,7 +31,7 @@ void GetCurrentTimeStr(char* buf) {
 
 // 入队操作：记录交易
 // 参数: 账户ID, 类型("Deposit"/"Withdraw"), 交易金额, 交易后余额
-int EnqueueLog(int id, const char* type, double amt, double bal) {
+int EnqueueLog(int id, const char* type, double amt, double bal, int target) {
     // 如果队列满，通过移动 front 指针覆盖最旧的日志 (环形队列特性)
     if (IsLogQueueFull()) {
         // 覆盖旧数据，队头自动出队
@@ -44,6 +44,7 @@ int EnqueueLog(int id, const char* type, double amt, double bal) {
     strcpy(g_logQueue.logs[pos].type, type);
     g_logQueue.logs[pos].amount = amt;
     g_logQueue.logs[pos].balance = bal;
+    g_logQueue.logs[pos].target_id = target;
     GetCurrentTimeStr(g_logQueue.logs[pos].timestamp);
     strcpy(g_logQueue.logs[pos].location, "宇宙总行"); // 根据你的需求固定地点
     
@@ -61,14 +62,18 @@ void ShowTransactionLogs() {
     }
     
     printf("\n=== 交易流水日志 ===\n");
-    printf("%-5s %-8s %-10s %-10s %-15s %-20s\n", "ID", "操作", "金额", "余额", "时间", "地点");
-    printf("--------------------------------------------------------------\n");
+    printf("%-5s %-8s %-10s %-10s %-10s %-15s %-20s\n", "ID", "操作", "金额", "余额", "目标", "时间", "地点");
+    printf("-----------------------------------------------------------------------\n");
     
     int i = g_logQueue.front;
     while (i != g_logQueue.rear) {
         LogEntry e = g_logQueue.logs[i];
-        printf("%-5d %-8s %-10.2f %-10.2f %-15s %-20s\n", 
-               e.account_id, e.type, e.amount, e.balance, e.timestamp, e.location);
+        printf("%-5d %-8s %-10.2f %-10.2f ", e.account_id, e.type, e.amount, e.balance);
+        if (e.target_id > 0)
+            printf("%-10d ", e.target_id);
+        else
+            printf("%-10s ", "-");
+        printf("%-15s %-20s\n", e.timestamp, e.location);
         i = (i + 1) % MAX_LOGS;
     }
 }
@@ -157,17 +162,19 @@ void SearchLogs(const char* pattern) {
         LogEntry e = g_logQueue.logs[i];
         
         // 将日志条目格式化为字符串（模拟一行文本）
-        char logLine[200];
-        sprintf(logLine, "ID:%d Type:%s Amount:%.2f Balance:%.2f Time:%s", 
-                e.account_id, e.type, e.amount, e.balance, e.timestamp);
+        char logLine[256];
+        sprintf(logLine, "ID:%d Type:%s Amount:%.2f Balance:%.2f Target:%d Time:%s", 
+                e.account_id, e.type, e.amount, e.balance, e.target_id, e.timestamp);
         
         // 使用KMP检查这一行是否包含模式
         // 这里为了演示调用了标准 strstr，你可以将其替换为上面的 KMPSearch
         // 但考虑到单行文本较短，KMP优势不大；如果是超长日志文件，KMP优势巨大
         
         if (strstr(logLine, pattern) != NULL) {
-            printf("%-3d %-8d %-10s %-10.2f %-15s\n", 
+            printf("%-3d %-8d %-10s %-10.2f %-15s", 
                    lineNum, e.account_id, e.type, e.amount, e.timestamp);
+            if (e.target_id > 0) printf(" -> %d", e.target_id);
+            printf("\n");
         }
         
         i = (i + 1) % MAX_LOGS;

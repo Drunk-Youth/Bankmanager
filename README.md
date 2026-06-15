@@ -13,11 +13,13 @@
   - 存款
   - 取款
   - 查询余额
+  - 转账（账户间资金转移）
 - **系统功能**
   - 用户登录验证
   - 权限分级（管理员/普通用户）
   - 数据持久化（自动保存到文件）
   - 交易流水查询（管理员）
+  - 资金关系图分析（管理员）：从转账日志建图，分析客户间资金来往关系
   - 自动初始化默认管理员账户
 
 ## 系统架构
@@ -38,6 +40,7 @@
    - 存款功能
    - 取款功能
    - 余额查询
+   - 转账功能（账户间资金转移）
 
 4. **数据持久化 (file_io.c)**
    - 数据保存到文件（bank.dat）
@@ -54,7 +57,14 @@
    - 函数声明
 
 7. **日志模块(log.c)**
-   - 日志记录和存储(循环链表)
+   - 日志记录和存储(环形队列)
+
+8. **资金关系图分析(graph.c)**
+   - 从转账日志构建邻接矩阵
+   - 显示全部转账关系图
+   - 查看指定账户关联关系
+   - 最活跃账户排名（度中心性）
+   - BFS最短转账路径查找
 
 ### 数据结构
 ```c
@@ -71,7 +81,7 @@ typedef struct strAccount
 ## 使用说明
 ### 编译
 ```bash
-gcc bank.c account.c transaction.c file_io.c utils.c -o bank_system
+gcc bank.c account.c transaction.c file_io.c utils.c log.c graph.c -o bank_system
 ```
 
 ### 运行
@@ -89,6 +99,7 @@ gcc bank.c account.c transaction.c file_io.c utils.c -o bank_system
    - 选项1：存款
    - 选项2：取款
    - 选项3：查询余额
+   - 选项4：转账
    - 选项0：退出账户
 
 3. **管理员界面**（登录后）
@@ -99,6 +110,9 @@ gcc bank.c account.c transaction.c file_io.c utils.c -o bank_system
    - 选项5：删除账户
    - 选项6：创建管理员账户
    - 选项7：查看交易流水
+   - 选项8：搜索交易日志
+   - 选项9：转账
+   - 选项10：资金关系图分析
    - 选项0：退出账户
 
 ### 默认账户
@@ -121,6 +135,8 @@ gcc bank.c account.c transaction.c file_io.c utils.c -o bank_system
 - `transaction.c` - 交易处理功能实现
 - `file_io.c` - 文件读写功能实现
 - `utils.c` - 工具函数实现
+- `log.c` - 日志记录和存储(环形队列)
+- `graph.c` - 资金关系图分析模块
 - `bank.h` - 头文件，包含结构体定义和函数声明
 - `bank.dat` - 数据存储文件（运行时自动生成）
 

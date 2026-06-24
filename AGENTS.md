@@ -3,7 +3,7 @@
 ## 构建 & 运行
 
 ```sh
-gcc bank.c account.c transaction.c file_io.c utils.c log.c graph.c -o bank_system
+gcc bank.c account.c transaction.c file_io.c utils.c log.c graph.c hash.c -o bank_system
 ./bank_system
 ```
 
@@ -22,6 +22,7 @@ gcc bank.c account.c transaction.c file_io.c utils.c log.c graph.c -o bank_syste
 | `utils.c` | 输入校验工具 |
 | `log.c` | 环形队列日志，支持按关键词搜索 |
 | `graph.c` | 从转账日志建图，分析客户间资金来往关系 |
+| `hash.c` | 哈希表，映射账户ID到数组下标，加速查找 |
 | `bank.h` | 唯一头文件，声明所有公有函数和类型 |
 
 ## 重要约束
@@ -38,3 +39,9 @@ gcc bank.c account.c transaction.c file_io.c utils.c log.c graph.c -o bank_syste
 - 中文注释和中文菜单字符串。
 - 全局变量命名前缀 `g_`（如 `g_iAccCount`, `g_astAccounts`）。
 - 无测试；曾有测试文件但已被删除（commit `ce8abe3`）。
+
+## 已知陷阱
+
+- **`InitAdminAccount()` 每次启动都调用**，无条件将 `g_astAccounts[0]` 重置为 admin/123456。管理员密码修改在重启后丢失。
+- **`GenerateDummyData()`（graph.c）会清空全部日志并修改余额**，仅用于测试演示，非生产操作。
+- **`DeleteAccount()` 不递减 `g_iAccCount`**——递减操作由调用方 `bank.c:83` 负责。函数内元素前移循环 `for (; i < g_iAccCount-i; i++)` 有逻辑错误。

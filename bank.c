@@ -19,6 +19,7 @@ int main(void)
         printf("=== 简易银行账户管理系统 ===\n");
         printf("欢迎使用! 系统已加载%d个账户\n", g_iAccCount);
         InitAdminAccount();//初始化管理员账号
+        RebuildHashTable();
         InitLogQueue();
         int iChoice=-1; //选择标志
         int pChoice=-1;
@@ -81,6 +82,7 @@ int main(void)
                             scanf("%d", &d_id);
                             DeleteAccount(d_id);
 							g_iAccCount--;
+                            RebuildHashTable();
                             break;
                         case 6:
                             CreateAccount(1);

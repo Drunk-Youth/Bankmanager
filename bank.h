@@ -3,6 +3,7 @@
 #define MAX_LOGS 100 // 日志队列最大容量，防止无限增长
 #define MAX_ACCOUNTS 50   //系统规格为50个账户
 #define NAME_LEN 31       //用户名字最长30字符，因此需要多1个字符串结束符
+#define HASH_SIZE 101     //哈希表大小，取质数以减少冲突
 
 // 账户信息，每个账户id对应了名字、账户余额等信息，是不是用数据结构定义比较合适？
 typedef struct strAccount
@@ -15,6 +16,21 @@ typedef struct strAccount
 } STACCOUNT;
 
 // strAccount STACCOUNT;
+
+// 哈希表条目，映射账户ID到g_astAccounts数组下标
+typedef struct {
+    int id;       // 账户ID，-1表示空槽位
+    int index;    // g_astAccounts中的下标
+} HashEntry;
+
+extern HashEntry g_hashTable[HASH_SIZE];
+
+// 哈希表操作
+void InitHashTable();
+int  HashInsert(int id, int index);
+int  HashSearch(int id);
+void HashDelete(int id);
+void RebuildHashTable();
     
 // 函数声明，main函数中调用的各模块函数需要在程序公用的.h中声明
 // 公开出来被其他模块调用的函数，也应该在公用的.h中声明

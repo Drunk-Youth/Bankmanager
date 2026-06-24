@@ -62,6 +62,7 @@ void CreateAccount(int quanxian)
     g_astAccounts[g_iAccCount] = stNewAcc;
     
     //把记录账户数量的全局变量自增。加过之后自增，所以下标0占用，数量是1个
+    HashInsert(stNewAcc.id, g_iAccCount);
     g_iAccCount++;
     
     printf("开户成功! 账户ID: %d\n", stNewAcc.id);
@@ -133,12 +134,7 @@ int LoginAccount(int temp_id) {
  */
 int FindAccount(int id) 
 {
-    for(int i = 0; i < g_iAccCount; i++) 
-    {
-        if(g_astAccounts[i].id == id) return i;
-    }
-    
-    return -1;
+    return HashSearch(id);
 }
 //删除账户
 void DeleteAccount(int id) {
@@ -151,6 +147,7 @@ void DeleteAccount(int id) {
         printf("正在删除一下账户...");
         printf("%-8d %-30s %-10.2f %-3d\n",
                    g_astAccounts[i].id, g_astAccounts[i].name, g_astAccounts[i].balance,g_astAccounts[i].quanxian);
+            HashDelete(id);
             for (; i < g_iAccCount-i; i++)
             {
                 g_astAccounts[i]=g_astAccounts[i+1];

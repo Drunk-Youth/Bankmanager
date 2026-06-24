@@ -60,11 +60,17 @@
    - 日志记录和存储(环形队列)
 
 8. **资金关系图分析(graph.c)**
-   - 从转账日志构建邻接矩阵
-   - 显示全部转账关系图
-   - 查看指定账户关联关系
-   - 最活跃账户排名（度中心性）
-   - BFS最短转账路径查找
+    - 从转账日志构建邻接矩阵
+    - 显示全部转账关系图
+    - 查看指定账户关联关系
+    - 最活跃账户排名（度中心性）
+    - BFS最短转账路径查找
+
+9. **哈希表模块(hash.c)**
+    - 映射账户ID到数组下标，O(1)快速查找
+    - 开放寻址法，线性探测解决冲突
+    - 墓碑标记处理删除操作
+    - 支持从数组重建哈希表
 
 ### 数据结构
 ```c
@@ -81,7 +87,7 @@ typedef struct strAccount
 ## 使用说明
 ### 编译
 ```bash
-gcc bank.c account.c transaction.c file_io.c utils.c log.c graph.c -o bank_system
+gcc bank.c account.c transaction.c file_io.c utils.c log.c graph.c hash.c -o bank_system
 ```
 
 ### 运行
@@ -127,7 +133,7 @@ gcc bank.c account.c transaction.c file_io.c utils.c log.c graph.c -o bank_syste
 - **密码规则**: 6位数字（100000-999999）
 - **数据存储**: 二进制文件（bank.dat）
 - **输入验证**: 所有数值输入都包含错误处理
-- **内存管理**: 使用全局数组存储账户数据
+- **内存管理**: 使用全局数组存储账户数据，哈希表加速ID查找
 
 ## 文件说明
 - `bank.c` - 主程序文件
@@ -137,6 +143,7 @@ gcc bank.c account.c transaction.c file_io.c utils.c log.c graph.c -o bank_syste
 - `utils.c` - 工具函数实现
 - `log.c` - 日志记录和存储(环形队列)
 - `graph.c` - 资金关系图分析模块
+- `hash.c` - 哈希表模块，映射账户ID到数组下标
 - `bank.h` - 头文件，包含结构体定义和函数声明
 - `bank.dat` - 数据存储文件（运行时自动生成）
 
@@ -149,7 +156,7 @@ gcc bank.c account.c transaction.c file_io.c utils.c log.c graph.c -o bank_syste
 
 ## 扩展建议
 - ~~添加交易记录功能~~
-- 实现账户排序和搜索
+- ~~实现账户快速搜索~~（已通过哈希表实现）
 - 增加更多权限级别
 - 改进用户界面（如使用图形界面）
 - 添加数据加密功能
